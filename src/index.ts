@@ -1,6 +1,6 @@
 import Fastify, {FastifyInstance} from 'fastify';
 import * as dotenv from 'dotenv';
-import {routes} from "./config/router.config";
+import {routes} from './config/router.config';
 
 /* environment variable setting */
 dotenv.config({ path: `.env.${process.env.NODE_ENV}` });
