@@ -1,7 +1,6 @@
 import {FastifyInstance} from "fastify";
+import {postController} from "../domain/post/post.controller";
 
 export async function routes (fastify: FastifyInstance) {
-    fastify.get('/', async () => {
-        return { hello: 'world' }
-    });
+    fastify.register(postController, {prefix: '/post'});
 }
