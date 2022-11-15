@@ -1,0 +1,26 @@
+{
+  "name": "fastify",
+  "version": "1.0.0",
+  "description": "blog api",
+  "main": "src/index.ts",
+  "scripts": {
+    "start" : "tsc-watch --noClear -p tsconfig.json --onSuccess \"node ./dist/index.js\"",
+    "dev" : "cross-env NODE_ENV=dev npm run start",
+    "local": "cross-env NODE_ENV=local npm run start",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "limcpf",
+  "license": "MIT",
+  "dependencies": {
+    "cross-env": "^7.0.3",
+    "dotenv": "^16.0.3",
+    "fastify": "^4.9.2"
+  },
+  "type": "module",
+  "devDependencies": {
+    "@types/dotenv": "^8.2.0",
+    "@types/node": "^18.11.9",
+    "tsc-watch": "^5.0.3",
+    "typescript": "^4.8.4"
+  }
+}
