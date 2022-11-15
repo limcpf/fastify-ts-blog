@@ -1,13 +1,23 @@
 {
+  "extends": "fastify-tsconfig",
   "compilerOptions": {
-    "allowJs": true,
-    "target": "ES5",
+    "sourceMap": true,
     "outDir": "./dist",
-    "moduleResolution": "Node",
-    "lib": ["ES2015", "DOM", "DOM.Iterable"],
-    "module": "esnext",
-    "allowSyntheticDefaultImports": true
+    "noImplicitAny": true,
+    "strictNullChecks": true,
+    "strictFunctionTypes": true,
+    "noImplicitThis": true,
+    "noUnusedParameters": true,
+    "noImplicitReturns": true,
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true
   },
-  "include": ["./src/**/*"],
-  "exclude": ["node_modules", "dist"]
+  "exclude": [
+    "node_modules"
+  ],
+  "include": [
+    "./src/**/*.ts"
+  ]
 }

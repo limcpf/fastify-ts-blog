@@ -1,5 +1,6 @@
-import Fastify, {FastifyInstance, FastifyReply, FastifyRequest} from 'fastify';
-import dotenv from 'dotenv';
+import Fastify, {FastifyInstance} from 'fastify';
+import * as dotenv from 'dotenv';
+import {routes} from "./config/router.config";
 
 /* environment variable setting */
 dotenv.config({ path: `.env.${process.env.NODE_ENV}` });
@@ -10,9 +11,7 @@ const fastify:FastifyInstance = Fastify({
 });
 
 /* router setting */
-fastify.get("/", function (request:FastifyRequest, reply:FastifyReply) {
-    reply.send({ hello: "world" })
-});
+fastify.register(routes);
 
 /* server running */
 fastify.listen({ port: 3000 }, function (err) {
