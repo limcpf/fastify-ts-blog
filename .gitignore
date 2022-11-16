@@ -1,6 +1,10 @@
 node_modules
 dist
 .idea
+prisma/migrations
+prisma/*.db
+prisma/*.db-journal
+
 .env
 .env.dev
 .env.local

@@ -1,7 +1,8 @@
 export interface PostInterface {
-    id: number;
+    id?: number;
+    published: boolean;
     title: string;
-    contents: string;
-    createdDate: string;
-    modifiedDate: string;
+    contents?: string;
+    createdAt: string;
+    updatedAt: string;
 }
