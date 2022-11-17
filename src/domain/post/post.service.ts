@@ -1,6 +1,6 @@
 import { PrismaClient, Prisma } from '@prisma/client'
 import {FastifyReply, FastifyRequest} from "fastify";
-import {SUCCESS} from "../../shared/status.shared";
+import {ERROR400, SUCCESS} from "../../shared/status.shared";
 import {handleServerError} from "../../shared/error.shared";
 
 const prisma = new PrismaClient();
@@ -45,9 +45,9 @@ export const createPost = async (request:createPostRequest, reply:FastifyReply) 
             contents: contents
         };
 
-        const user = await prisma.post.create({ data: userData });
+        const post = await prisma.post.create({ data: userData });
 
-        reply.status(SUCCESS["201"]).send(user);
+        reply.status(SUCCESS["201"]).send(post);
     } catch (e) {
         console.log(e);
         handleServerError(reply);
@@ -55,5 +55,71 @@ export const createPost = async (request:createPostRequest, reply:FastifyReply) 
 };
 /* createPost end */
 
+/* findPostById start */
+type findPostByIdRequest = FastifyRequest<{
+    Params: {id: string}
+}>
+
+export const findPostById = async (request:findPostByIdRequest, reply:FastifyReply) => {
+    try {
+        const { id } = request.params;
+
+        const post = await getPostById(+id, reply);
+
+        reply.status(SUCCESS["200"]).send(post);
+    } catch (e) {
+        console.log(e);
+        handleServerError(reply);
+    }
+};
+/* findPostById end */
+
+/* togglePublished start */
+type togglePublishedRequest = FastifyRequest<{
+    Querystring: { id: string }
+}>
+
+export const togglePublished = async (request:togglePublishedRequest, reply:FastifyReply) => {
+    try {
+        const { id } = request.query;
+
+        const published = await prisma.post.findUnique({
+            where: {
+                id: +id
+            },
+            select: {
+                published: true
+            },
+        })
+
+       const result = await prisma.post.update({
+            where: {
+                id: +id
+            },
+            data: {
+                published: !published
+            }
+        });
+
+        reply.status(SUCCESS["200"]).send(result);
+    } catch (e) {
+        console.log(e);
+        handleServerError(reply);
+    }
+};
+/* togglePublished end */
+
+/* only use in this service */
+const getPostById = (id: number, reply:FastifyReply) => {
+    if(id) {
+        return prisma.post.findUnique({
+            where: { id: id }
+        })
+    } else {
+        reply.status(ERROR400.statusCode).send(ERROR400.message);
+    }
+
+    return;
+}
 
 
