@@ -76,12 +76,12 @@ export const findPostById = async (request:findPostByIdRequest, reply:FastifyRep
 
 /* togglePublished start */
 type togglePublishedRequest = FastifyRequest<{
-    Querystring: { id: string }
+    Params: { id: string }
 }>
 
 export const togglePublished = async (request:togglePublishedRequest, reply:FastifyReply) => {
     try {
-        const { id } = request.query;
+        const { id } = request.params;
 
         const published = await prisma.post.findUnique({
             where: {
@@ -117,9 +117,8 @@ const getPostById = (id: number, reply:FastifyReply) => {
         })
     } else {
         reply.status(ERROR400.statusCode).send(ERROR400.message);
+        return;
     }
-
-    return;
 }
 
 
