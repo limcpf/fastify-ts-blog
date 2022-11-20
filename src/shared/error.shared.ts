@@ -1,5 +1,6 @@
 import { FastifyReply } from "fastify"
-import { ERROR500 } from "./status.shared"
+import {customError} from "./status.shared"
+
 
 export const ERRORS = {
     invalidToken: new Error('Token is invalid.'),
@@ -9,6 +10,4 @@ export const ERRORS = {
     tokenError: new Error('Invalid Token'),
 }
 
-export function handleServerError(reply: FastifyReply) {
-    return reply.status(ERROR500.statusCode).send(ERROR500);
-}
+export const throwError = (reply: FastifyReply, error: customError) => reply.status(error.statusCode).send(error.message);

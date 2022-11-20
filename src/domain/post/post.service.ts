@@ -1,7 +1,7 @@
 import { PrismaClient, Prisma } from '@prisma/client'
 import {FastifyReply, FastifyRequest} from "fastify";
-import {ERROR400, SUCCESS} from "../../shared/status.shared";
-import {handleServerError} from "../../shared/error.shared";
+import {ERROR400, ERROR422, ERROR500, SUCCESS} from "../../shared/status.shared";
+import {throwError} from "../../shared/error.shared";
 
 const prisma = new PrismaClient();
 
@@ -23,7 +23,7 @@ export const findPosts = async (request:findPostsRequest, reply:FastifyReply) =>
         reply.status(SUCCESS["200"]).send({ data: post })
     } catch (e) {
         console.log(e);
-        handleServerError(reply);
+        throwError(reply, ERROR500);
     }
 };
 /* findPosts end */
@@ -50,7 +50,7 @@ export const createPost = async (request:createPostRequest, reply:FastifyReply) 
         reply.status(SUCCESS["201"]).send(post);
     } catch (e) {
         console.log(e);
-        handleServerError(reply);
+        throwError(reply, ERROR500);
     }
 };
 /* createPost end */
@@ -66,10 +66,14 @@ export const findPostById = async (request:findPostByIdRequest, reply:FastifyRep
 
         const post = await getPostById(+id, reply);
 
-        reply.status(SUCCESS["200"]).send(post);
+        if(reply.sent) {
+            if(post) reply.status(SUCCESS["200"]).send(post);
+            else throwError(reply, ERROR422);
+        }
     } catch (e) {
         console.log(e);
-        handleServerError(reply);
+
+        if(!reply.sent) throwError(reply, ERROR500);
     }
 };
 /* findPostById end */
@@ -104,7 +108,7 @@ export const togglePublished = async (request:togglePublishedRequest, reply:Fast
         reply.status(SUCCESS["200"]).send(result);
     } catch (e) {
         console.log(e);
-        handleServerError(reply);
+        throwError(reply, ERROR500);
     }
 };
 /* togglePublished end */
@@ -116,7 +120,7 @@ const getPostById = (id: number, reply:FastifyReply) => {
             where: { id: id }
         })
     } else {
-        reply.status(ERROR400.statusCode).send(ERROR400.message);
+        throwError(reply, ERROR400);
         return;
     }
 }
