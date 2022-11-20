@@ -66,7 +66,7 @@ export const findPostById = async (request:findPostByIdRequest, reply:FastifyRep
 
         const post = await getPostById(+id, reply);
 
-        if(reply.sent) {
+        if(!reply.sent) {
             if(post) reply.status(SUCCESS["200"]).send(post);
             else throwError(reply, ERROR422);
         }
@@ -87,7 +87,7 @@ export const togglePublished = async (request:togglePublishedRequest, reply:Fast
     try {
         const { id } = request.params;
 
-        const published = await prisma.post.findUnique({
+        const post = await prisma.post.findUnique({
             where: {
                 id: +id
             },
@@ -96,16 +96,23 @@ export const togglePublished = async (request:togglePublishedRequest, reply:Fast
             },
         })
 
-       const result = await prisma.post.update({
-            where: {
-                id: +id
-            },
-            data: {
-                published: !published
-            }
-        });
 
-        reply.status(SUCCESS["200"]).send(result);
+        if(post && post.published != null) {
+            const result = await prisma.post.update({
+                where: {
+                    id: +id
+                },
+                data: {
+                    published: !post.published
+                }
+            });
+
+            reply.status(SUCCESS["200"]).send(result);
+        } else {
+            throwError(reply, ERROR400);
+        }
+
+
     } catch (e) {
         console.log(e);
         throwError(reply, ERROR500);
