@@ -10,8 +10,12 @@ const fastify:FastifyInstance = Fastify({
     logger: process.env.NODE_ENV !== "production"
 });
 
+
+
 /* router setting */
 fastify.register(routes);
+
+
 
 /* server running */
 fastify.listen({ port: 3000 }, function (err) {

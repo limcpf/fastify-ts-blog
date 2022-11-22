@@ -6,3 +6,8 @@ export interface PostInterface {
     createdAt: string;
     updatedAt: string;
 }
+
+export interface UpdatePostInterface {
+    title? :string;
+    contents? :string;
+}

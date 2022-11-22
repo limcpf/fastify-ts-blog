@@ -2,6 +2,7 @@ import { PrismaClient, Prisma } from '@prisma/client'
 import {FastifyReply, FastifyRequest} from "fastify";
 import {ERROR400, ERROR422, ERROR500, SUCCESS} from "../../shared/status.shared";
 import {throwError} from "../../shared/error.shared";
+import {UpdatePostInterface} from "./post.interface";
 
 const prisma = new PrismaClient();
 
@@ -49,7 +50,6 @@ export const createPost = async (request:createPostRequest, reply:FastifyReply) 
 
         reply.status(SUCCESS["201"]).send(post);
     } catch (e) {
-        console.log(e);
         throwError(reply, ERROR500);
     }
 };
@@ -64,16 +64,13 @@ export const findPostById = async (request:findPostByIdRequest, reply:FastifyRep
     try {
         const { id } = request.params;
 
-        const post = await getPostById(+id, reply);
+        const post = await getPostById(+id);
 
-        if(!reply.sent) {
-            if(post) reply.status(SUCCESS["200"]).send(post);
-            else throwError(reply, ERROR422);
-        }
+        if(post) reply.status(SUCCESS["200"]).send(post);
+        else throwError(reply, ERROR422, "잘못된 id 입니다.");
     } catch (e) {
         console.log(e);
-
-        if(!reply.sent) throwError(reply, ERROR500);
+        throwError(reply, ERROR500);
     }
 };
 /* findPostById end */
@@ -96,7 +93,6 @@ export const togglePublished = async (request:togglePublishedRequest, reply:Fast
             },
         })
 
-
         if(post && post.published != null) {
             const result = await prisma.post.update({
                 where: {
@@ -111,8 +107,6 @@ export const togglePublished = async (request:togglePublishedRequest, reply:Fast
         } else {
             throwError(reply, ERROR400);
         }
-
-
     } catch (e) {
         console.log(e);
         throwError(reply, ERROR500);
@@ -120,16 +114,64 @@ export const togglePublished = async (request:togglePublishedRequest, reply:Fast
 };
 /* togglePublished end */
 
+/* updatePostById start */
+type updatePostByIdRequest = FastifyRequest<{
+    Body: {
+        id: number,
+        title: string,
+        contents: string
+    }
+}>
+
+export const updatePost = async (request:updatePostByIdRequest, reply:FastifyReply) => {
+    try {
+        const {id, title, contents} = request.body;
+
+        const post = await prisma.post.findUnique({
+            where: {
+                id: id
+            },
+            select: {
+                title: true,
+                contents: true
+            },
+        });
+
+        const updateData: UpdatePostInterface = {};
+        if(!post) {
+            throwError(reply, ERROR422, "잘못된 id 값 입니다.");
+            return;
+        }
+
+        if(title && post.title && title !== post.title) {
+            updateData.title = title;
+        }
+
+        if(contents && post.contents && contents !== post.contents) {
+            updateData.contents = contents;
+        }
+
+        if(updateData.title || updateData.contents) {
+            const result = await prisma.post.update({
+                where: {
+                    id: id
+                },
+                data: updateData
+            });
+
+            reply.status(SUCCESS["200"]).send(result);
+        } else {
+            throwError(reply, ERROR422, "수정할 내용을 입력해주세요.");
+        }
+    } catch (e) {
+        throwError(reply, ERROR500);
+    }
+};
+/* updatePostById end */
+
 /* only use in this service */
-const getPostById = (id: number, reply:FastifyReply) => {
-    if(id) {
+const getPostById = (id: number) => {
         return prisma.post.findUnique({
             where: { id: id }
         })
-    } else {
-        throwError(reply, ERROR400);
-        return;
-    }
 }
-
-

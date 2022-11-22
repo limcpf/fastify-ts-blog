@@ -10,4 +10,4 @@ export const ERRORS = {
     tokenError: new Error('Invalid Token'),
 }
 
-export const throwError = (reply: FastifyReply, error: customError) => reply.status(error.statusCode).send(error.message);
+export const throwError = (reply: FastifyReply, error: customError, message?: string) => reply.status(error.statusCode).send( message ? message : error.message);

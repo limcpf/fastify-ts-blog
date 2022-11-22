@@ -1,5 +1,5 @@
 import {FastifyInstance} from "fastify";
-import {createPost, findPostById, findPosts, togglePublished} from "./post.service";
+import {createPost, findPostById, findPosts, togglePublished, updatePost} from "./post.service";
 import S from 'fluent-json-schema'
 import {GetSchema, PostSchema} from "../../shared/schema.shared";
 
@@ -33,6 +33,14 @@ const togglePublishedSchema: GetSchema = {
     headers: S.object()
 }
 
+const updatePostSchema: PostSchema = {
+    body: S.object()
+        .prop('id', S.number().required())
+        .prop('title', S.string())
+        .prop('contents', S.string()),
+    headers: S.object(),
+}
+
 export async function postRoute(fastify: FastifyInstance) {
     fastify.route({
         method: 'GET',
@@ -61,5 +69,12 @@ export async function postRoute(fastify: FastifyInstance) {
         schema: togglePublishedSchema,
         handler: togglePublished
     });
+
+    fastify.route({
+        method: 'PATCH',
+        url: '/',
+        schema: updatePostSchema,
+        handler: updatePost
+    })
 }
 
