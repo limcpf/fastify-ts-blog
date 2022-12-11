@@ -23,7 +23,6 @@ export const login = async (request: loginRequest, reply: FastifyReply) => {
 		const user = request.body;
 
 		const count = await countUser(user);
-
 		if (!count) {
 			if (await hasUser()) {
 				throwError(reply, ERROR400, "운영자 계정만 접근 가능합니다.");

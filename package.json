@@ -9,15 +9,16 @@
     "local": "cross-env NODE_ENV=local npm run start",
     "test": "echo \"Error: no test specified\" && exit 1",
     "format": "rome format . --write",
-    "lint" : "rome check . --apply-suggested"
+    "lint": "rome check . --apply-suggested"
   },
   "author": "limcpf",
   "license": "MIT",
   "dependencies": {
+    "@faker-js/faker": "^7.6.0",
     "@fastify/cookie": "^8.3.0",
     "@fastify/cors": "^8.2.0",
     "@fastify/jwt": "^6.5.0",
-    "@prisma/client": "^4.6.1",
+    "@prisma/client": "^4.7.1",
     "fastify": "^4.9.2"
   },
   "devDependencies": {
@@ -29,7 +30,11 @@
     "fluent-json-schema": "^4.0.0",
     "prisma": "^4.6.1",
     "rome": "^10.0.1",
+    "ts-node": "^10.9.1",
     "tsc-watch": "^5.0.3",
     "typescript": "^4.8.4"
+  },
+  "prisma": {
+    "seed": "ts-node --compiler-options {\"module\":\"CommonJS\"} prisma/seed.ts"
   }
 }
