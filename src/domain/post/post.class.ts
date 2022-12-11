@@ -23,8 +23,9 @@ export class PostClass extends TimeClass {
 	}
 
 	private validateTitle(title: string): string {
-		if (!title) { new Error("제목이 비었습니다."); }
-		else if (title.length > 255) {
+		if (!title) {
+			new Error("제목이 비었습니다.");
+		} else if (title.length > 255) {
 			new Error("제목은 255자를 넘어갈 수 없습니다.");
 		}
 		return title;

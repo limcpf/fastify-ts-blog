@@ -15,7 +15,9 @@ import {
 } from "../../shared/schema.shared";
 
 const checkExp = (exp: string) => {
-	if (!exp) { return false; }
+	if (!exp) {
+		return false;
+	}
 	return +exp > new Date().getTime();
 };
 

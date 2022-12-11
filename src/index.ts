@@ -23,7 +23,7 @@ fastify.register(fastifyCors, {
 
 /* jwt setting */
 const secret = process.env.JWT_TOKEN_SECRET;
-if(!secret) process.exit(1);
+if (!secret) { process.exit(1); }
 fastify.register(jwt, { secret });
 
 /* server running */

@@ -8,8 +8,7 @@
     "dev": "cross-env NODE_ENV=dev npm run start",
     "local": "cross-env NODE_ENV=local npm run start",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "format": "rome format . --write",
-    "lint": "rome check . --apply-suggested"
+    "format": "rome format . --write && rome check . --apply-suggested"
   },
   "author": "limcpf",
   "license": "MIT",

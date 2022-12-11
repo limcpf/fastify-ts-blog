@@ -29,13 +29,15 @@ export const findPosts = async (
 			take: size,
 			skip: (page - 1) * size,
 			where: addPublished({}, request.headers.isAdmin),
-			orderBy: [{
-				createdAt: 'desc'
-			}]
+			orderBy: [
+				{
+					createdAt: "desc",
+				},
+			],
 		});
 
 		const listCnt = await prisma.post.count({
-			where: addPublished({}, request.headers.isAdmin)
+			where: addPublished({}, request.headers.isAdmin),
 		});
 
 		reply.status(SUCCESS["200"]).send({ data: post, cnt: listCnt });
@@ -60,7 +62,9 @@ export const createPost = async (
 	reply: FastifyReply,
 ) => {
 	try {
-		if (request.headers.isAdmin === "true") throw new Error("운영자만 접근 가능합니다.");
+		if (request.headers.isAdmin === "true") {
+			throw new Error("운영자만 접근 가능합니다.");
+		}
 
 		const { title, contents } = request.body;
 
@@ -94,8 +98,11 @@ export const findPostById = async (
 
 		const post = await getPostById(+id, request.headers.isAdmin);
 
-		if (post) { reply.status(SUCCESS["200"]).send(post); }
-		else { throwError(reply, ERROR422, "잘못된 id 입니다."); }
+		if (post) {
+			reply.status(SUCCESS["200"]).send(post);
+		} else {
+			throwError(reply, ERROR422, "잘못된 id 입니다.");
+		}
 	} catch (e) {
 		const u = e as Error;
 		throwError(reply, ERROR500, u.message);
