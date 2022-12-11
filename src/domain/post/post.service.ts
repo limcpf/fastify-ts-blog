@@ -29,9 +29,16 @@ export const findPosts = async (
 			take: size,
 			skip: (page - 1) * size,
 			where: addPublished({}, request.headers.isAdmin),
+			orderBy: [{
+				createdAt: 'desc'
+			}]
 		});
 
-		reply.status(SUCCESS["200"]).send({ data: post });
+		const listCnt = await prisma.post.count({
+			where: addPublished({}, request.headers.isAdmin)
+		});
+
+		reply.status(SUCCESS["200"]).send({ data: post, cnt: listCnt });
 	} catch (e) {
 		const u = e as Error;
 		throwError(reply, ERROR500, u.message);
