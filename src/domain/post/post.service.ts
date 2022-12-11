@@ -207,7 +207,7 @@ export const updatePost = async (
 /* only use in this service */
 const getPostById = (id: number, isAdmin?: string | string[] | undefined) => {
 	const where = { id: id };
-	return prisma.post.findUnique({
+	return prisma.post.findFirst({
 		where: addPublished(where, isAdmin),
 	});
 };
