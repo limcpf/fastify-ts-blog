@@ -62,10 +62,6 @@ export const createPost = async (
 	reply: FastifyReply,
 ) => {
 	try {
-		if (request.headers.isAdmin === "true") {
-			throw new Error("운영자만 접근 가능합니다.");
-		}
-
 		const { title, contents } = request.body;
 
 		const userData: Prisma.PostCreateInput = {
@@ -131,20 +127,23 @@ export const togglePublished = async (
 			},
 		});
 
-		if (post?.published != null) {
-			const result = await prisma.post.update({
-				where: {
-					id: +id,
-				},
-				data: {
-					published: !post.published,
-				},
-			});
+		console.log(post);
 
-			reply.status(SUCCESS["200"]).send(result);
-		} else {
+		if (!post) {
 			throwError(reply, ERROR400);
+			return;
 		}
+
+		const result = await prisma.post.update({
+			where: {
+				id: +id,
+			},
+			data: {
+				published: !post.published,
+			},
+		});
+
+		reply.status(SUCCESS["200"]).send(result);
 	} catch (e) {
 		const u = e as Error;
 		throwError(reply, ERROR500, u.message);

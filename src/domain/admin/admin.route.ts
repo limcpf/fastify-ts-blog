@@ -101,4 +101,10 @@ export async function adminRoute(fastify: FastifyInstance) {
 		schema: updatePostSchema,
 		handler: updatePost,
 	});
+
+	fastify.route({
+		method: "GET",
+		url: "/",
+		handler: () => {},
+	});
 }
