@@ -10,8 +10,19 @@ datasource db {
   url      = "file:./dev.db?socket_timeout=3000"
 }
 
+model Series {
+  id        Int      @id @default(autoincrement())
+  name      String
+  published Boolean  @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  Post      Post[]
+}
+
 model Post {
   id        Int      @id @default(autoincrement())
+  series    Series?   @relation(fields: [seriesId], references: [id])
+  seriesId  Int?
   published Boolean  @default(false)
   title     String
   contents  String
@@ -20,7 +31,7 @@ model Post {
 }
 
 model User {
-    id        String @id
-    name      String
-    email     String
+  id    String @id
+  name  String
+  email String
 }

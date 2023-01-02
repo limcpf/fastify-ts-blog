@@ -44,3 +44,19 @@ export const updatePostSchema: PostSchema = {
 		.prop("contents", S.string()),
 	headers: S.object(),
 };
+
+export const findSeriesByPostIdSchema: GetSchema = {
+	params: S.object()
+		.prop("id", S.string().required()),
+	headers: S.object()
+}
+
+export const findSeriesSchema: GetSchema = {
+	headers: S.object(),
+};
+
+export const createSeriesSchema: PostSchema = {
+	body: S.object()
+		.prop("name", S.string()),
+	headers: S.object()
+}

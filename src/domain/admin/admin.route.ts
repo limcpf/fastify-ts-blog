@@ -13,6 +13,7 @@ import {
 	togglePublishedSchema,
 	updatePostSchema,
 } from "../../shared/schema.shared";
+import {seriesRouter} from "../series/series.router";
 
 const checkExp = (exp: string) => {
 	if (!exp) {
@@ -73,6 +74,8 @@ export async function adminRoute(fastify: FastifyInstance) {
 			reply.status(ERROR401.statusCode).send(ERROR401.message);
 		}
 	});
+
+	fastify.register(seriesRouter, {prefix : "/series"});
 
 	fastify.route({
 		method: "GET",
