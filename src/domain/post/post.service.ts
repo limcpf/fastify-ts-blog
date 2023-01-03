@@ -34,6 +34,9 @@ export const findPosts = async (
 					createdAt: "desc",
 				},
 			],
+			include: {
+				series: true,
+			},
 		});
 
 		const listCnt = await prisma.post.count({
@@ -54,6 +57,7 @@ type createPostRequest = FastifyRequest<{
 	Body: {
 		title: string;
 		contents: string;
+		seriesId?: number;
 	};
 }>;
 
@@ -62,11 +66,16 @@ export const createPost = async (
 	reply: FastifyReply,
 ) => {
 	try {
-		const { title, contents } = request.body;
+		const { title, contents, seriesId } = request.body;
 
 		const userData: Prisma.PostCreateInput = {
 			title: title,
 			contents: contents,
+			series: {
+				connect: {
+					id: seriesId,
+				},
+			},
 		};
 
 		const post = await prisma.post.create({ data: userData });
@@ -215,6 +224,9 @@ const getPostById = (id: number, isAdmin?: string | string[] | undefined) => {
 	const where = { id: id };
 	return prisma.post.findFirst({
 		where: addPublished(where, isAdmin),
+		include: {
+			series: true,
+		},
 	});
 };
 

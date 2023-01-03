@@ -23,7 +23,8 @@ export const findPostsSchema: GetSchema = {
 export const createPostSchema: PostSchema = {
 	body: S.object()
 		.prop("title", S.string().required())
-		.prop("contents", S.string().required()),
+		.prop("contents", S.string().required())
+		.prop("seriesId", S.number()),
 	headers: S.object(),
 };
 
@@ -45,18 +46,16 @@ export const updatePostSchema: PostSchema = {
 	headers: S.object(),
 };
 
-export const findSeriesByPostIdSchema: GetSchema = {
-	params: S.object()
-		.prop("id", S.string().required()),
-	headers: S.object()
-}
-
 export const findSeriesSchema: GetSchema = {
+	params: S.object().prop("id", S.string().required()),
+	headers: S.object(),
+};
+
+export const findSeriesNameSchema: GetSchema = {
 	headers: S.object(),
 };
 
 export const createSeriesSchema: PostSchema = {
-	body: S.object()
-		.prop("name", S.string()),
-	headers: S.object()
-}
+	body: S.object().prop("name", S.string()),
+	headers: S.object(),
+};
