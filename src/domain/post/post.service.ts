@@ -1,4 +1,4 @@
-import { PrismaClient, Prisma } from "@prisma/client";
+import { PrismaClient } from "@prisma/client";
 import { FastifyReply, FastifyRequest } from "fastify";
 import {
 	ERROR400,
@@ -8,6 +8,8 @@ import {
 } from "../../shared/status.shared";
 import { throwError } from "../../shared/error.shared";
 import { UpdatePostInterface } from "./post.interface";
+import {PostBuilder} from "./post.builder";
+import {Post} from "./post.class";
 
 const prisma = new PrismaClient();
 
@@ -68,19 +70,15 @@ export const createPost = async (
 	try {
 		const { title, contents, seriesId } = request.body;
 
-		const userData: Prisma.PostCreateInput = {
-			title: title,
-			contents: contents,
-			series: {
-				connect: {
-					id: seriesId,
-				},
-			},
-		};
+		const post: Post = new PostBuilder()
+			.title(title)
+			.contents(contents)
+			.seriesId(seriesId)
+			.build();
 
-		const post = await prisma.post.create({ data: userData });
+		const result = await prisma.post.create({ data: post.create() });
 
-		reply.status(SUCCESS["201"]).send(post);
+		reply.status(SUCCESS["201"]).send(result);
 	} catch (e) {
 		const u = e as Error;
 		throwError(reply, ERROR500, u.message);

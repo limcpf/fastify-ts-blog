@@ -1,9 +1,9 @@
 export class TimeClass {
-	readonly createdAt: string;
-	readonly updatedAt: string;
+	createdAt: string;
+	updatedAt: string;
 
-	constructor(createAt: string, updateAt: string) {
-		this.createdAt = createAt;
-		this.updatedAt = updateAt;
+	constructor() {
+		this.createdAt = "";
+		this.updatedAt = "";
 	}
 }

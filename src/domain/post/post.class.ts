@@ -1,40 +1,30 @@
-import { PostInterface } from "./post.interface";
 import { TimeClass } from "../time.class";
+import {Prisma} from "@prisma/client";
 
-export class PostClass extends TimeClass {
-	readonly id?: number;
-	private published: boolean;
+export class Post extends TimeClass {
+	id: number;
+	published?: boolean;
 	title: string;
-	contents?: string;
+	contents: string;
+	seriesId?: number;
 
-	constructor({
-		id,
-		title,
-		published,
-		contents,
-		createdAt,
-		updatedAt,
-	}: PostInterface) {
-		super(createdAt, updatedAt);
-		this.id = id;
-		this.published = published ?? false;
-		this.title = this.validateTitle(title);
-		this.contents = contents;
+	constructor() {
+		super();
+		this.id = 0;
+		this.title = "";
+		this.contents = "";
 	}
 
-	private validateTitle(title: string): string {
-		if (!title) {
-			new Error("제목이 비었습니다.");
-		} else if (title.length > 255) {
-			new Error("제목은 255자를 넘어갈 수 없습니다.");
+	create(): Prisma.PostCreateInput {
+		// TODO : 정합성 추가해야함
+		return {
+			title: this.title,
+			contents: this.contents,
+			series: {
+				connect: {
+					id: this.seriesId,
+				},
+			}
 		}
-		return title;
-	}
-
-	public togglePublished() {
-		this.published = !this.published;
-	}
-	public getPublished(): boolean {
-		return this.published;
 	}
 }
