@@ -27,4 +27,17 @@ export class Post extends TimeClass {
 			}
 		}
 	}
+
+	update(): Prisma.PostUpdateInput {
+		// TODO : 정합성 추가해야함
+		return {
+			title: this.title,
+			contents: this.contents,
+			series: {
+				connect: {
+					id: this.seriesId
+				}
+			}
+		}
+	}
 }

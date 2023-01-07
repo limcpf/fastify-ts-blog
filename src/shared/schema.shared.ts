@@ -41,8 +41,9 @@ export const togglePublishedSchema: GetSchema = {
 export const updatePostSchema: PostSchema = {
 	body: S.object()
 		.prop("id", S.number().required())
-		.prop("title", S.string())
-		.prop("contents", S.string()),
+		.prop("title", S.string().required())
+		.prop("contents", S.string().required())
+		.prop("seriesId", S.number().required()),
 	headers: S.object(),
 };
 

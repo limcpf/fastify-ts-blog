@@ -1,5 +1,5 @@
 import {Post} from "./post.class";
-import {Builder, BuilderType} from "../../../@types";
+import {Builder} from "../../shared/builder.shared";
 
 export class PostBuilder extends Builder<Post> implements BuilderType<Post> {
    constructor() {

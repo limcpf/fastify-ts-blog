@@ -7,7 +7,6 @@ import {
 	SUCCESS,
 } from "../../shared/status.shared";
 import { throwError } from "../../shared/error.shared";
-import { UpdatePostInterface } from "./post.interface";
 import {PostBuilder} from "./post.builder";
 import {Post} from "./post.class";
 
@@ -76,6 +75,8 @@ export const createPost = async (
 			.seriesId(seriesId)
 			.build();
 
+		post.printLog();
+
 		const result = await prisma.post.create({ data: post.create() });
 
 		reply.status(SUCCESS["201"]).send(result);
@@ -134,8 +135,6 @@ export const togglePublished = async (
 			},
 		});
 
-		console.log(post);
-
 		if (!post) {
 			throwError(reply, ERROR400);
 			return;
@@ -164,6 +163,7 @@ type updatePostByIdRequest = FastifyRequest<{
 		id: number;
 		title: string;
 		contents: string;
+		seriesId: number;
 	};
 }>;
 
@@ -172,44 +172,22 @@ export const updatePost = async (
 	reply: FastifyReply,
 ) => {
 	try {
-		const { id, title, contents } = request.body;
+		const { id, title, contents, seriesId } = request.body;
 
-		const post = await prisma.post.findUnique({
-			where: {
-				id: id,
-			},
-			select: {
-				title: true,
-				contents: true,
-			},
-		});
-
-		const updateData: UpdatePostInterface = {};
-		if (!post) {
-			throwError(reply, ERROR422, "잘못된 id 값 입니다.");
-			return;
-		}
-
-		if (title && post.title && title !== post.title) {
-			updateData.title = title;
-		}
-
-		if (contents && post.contents && contents !== post.contents) {
-			updateData.contents = contents;
-		}
-
-		if (updateData.title || updateData.contents) {
+		const newPost = new PostBuilder()
+			.id(id)
+			.title(title)
+			.contents(contents)
+			.seriesId(seriesId)
+			.build();
 			const result = await prisma.post.update({
 				where: {
 					id: id,
 				},
-				data: updateData,
-			});
+				data: newPost.update(),
+			})
 
 			reply.status(SUCCESS["200"]).send(result);
-		} else {
-			throwError(reply, ERROR422, "수정할 내용을 입력해주세요.");
-		}
 	} catch (e) {
 		const u = e as Error;
 		throwError(reply, ERROR500, u.message);
