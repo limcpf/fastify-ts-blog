@@ -1,5 +1,5 @@
 import { TimeClass } from "../time.class";
-import {Prisma} from "@prisma/client";
+import { Prisma } from "@prisma/client";
 
 export class Post extends TimeClass {
 	id: number;
@@ -24,8 +24,8 @@ export class Post extends TimeClass {
 				connect: {
 					id: this.seriesId,
 				},
-			}
-		}
+			},
+		};
 	}
 
 	update(): Prisma.PostUpdateInput {
@@ -35,9 +35,9 @@ export class Post extends TimeClass {
 			contents: this.contents,
 			series: {
 				connect: {
-					id: this.seriesId
-				}
-			}
-		}
+					id: this.seriesId,
+				},
+			},
+		};
 	}
 }

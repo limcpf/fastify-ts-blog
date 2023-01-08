@@ -1,6 +1,6 @@
-import {defaultClass} from "../shared/class.shared";
+import { defaultClass } from "../shared/class.shared";
 
-export class TimeClass extends defaultClass{
+export class TimeClass extends defaultClass {
 	createdAt: string;
 	updatedAt: string;
 

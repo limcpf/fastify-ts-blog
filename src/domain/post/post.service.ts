@@ -7,8 +7,8 @@ import {
 	SUCCESS,
 } from "../../shared/status.shared";
 import { throwError } from "../../shared/error.shared";
-import {PostBuilder} from "./post.builder";
-import {Post} from "./post.class";
+import { PostBuilder } from "./post.builder";
+import { Post } from "./post.class";
 
 const prisma = new PrismaClient();
 
@@ -180,14 +180,14 @@ export const updatePost = async (
 			.contents(contents)
 			.seriesId(seriesId)
 			.build();
-			const result = await prisma.post.update({
-				where: {
-					id: id,
-				},
-				data: newPost.update(),
-			})
+		const result = await prisma.post.update({
+			where: {
+				id: id,
+			},
+			data: newPost.update(),
+		});
 
-			reply.status(SUCCESS["200"]).send(result);
+		reply.status(SUCCESS["200"]).send(result);
 	} catch (e) {
 		const u = e as Error;
 		throwError(reply, ERROR500, u.message);
